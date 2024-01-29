@@ -38,7 +38,7 @@ public class UserJpaController {
     }
 
     @GetMapping("/jpa/users/{id}")
-    public EntityModel<User> retrieveUser(@PathVariable Long id) {
+    public EntityModel<User> retrieveUser(@PathVariable int id) {
         Optional<User> user = userRepository.findById(id);
 
         if (user == null)
@@ -54,8 +54,19 @@ public class UserJpaController {
     }
 
     @DeleteMapping("/jpa/users/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public void deleteUser(@PathVariable int id) {
         userRepository.deleteById(id);
+    }
+
+    @GetMapping("/jpa/users/{id}/posts")
+    public List<Post> getPostsForUser(@PathVariable int id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user == null)
+            throw new UserNotFoundException("id:" + id);
+
+        return user.get().getPosts();
+
     }
 
     @PostMapping("/jpa/users")
