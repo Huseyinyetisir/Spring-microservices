@@ -2,16 +2,25 @@ package com.microservicedoodles.microservicedoodles.user;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
+@Entity(name = "user_details")
 public class User {
 
+	@Id
+	@GeneratedValue
 	private Integer id;
 
+	@Column(name = "name")
 	@Size(min = 2, message = "Name should have atleast 2 characters")
 	private String name;
 
+	@Column(name = "birth_date")
 	@Past(message = "Birth Date should be in the past")
 	private LocalDate birthDate;
 
@@ -20,6 +29,9 @@ public class User {
 		this.id = id;
 		this.name = name;
 		this.birthDate = birthDate;
+	}
+
+	protected User() {
 	}
 
 	public Integer getId() {
