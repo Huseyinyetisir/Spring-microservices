@@ -27,9 +27,12 @@ public class UserJpaController {
 
     private UserRepository userRepository;
 
-    public UserJpaController(UserDaoService service, UserRepository userRepository) {
+    private PostRepository postRepository;
+
+    public UserJpaController(UserDaoService service, UserRepository userRepository, PostRepository postRepository) {
         this.service = service;
         this.userRepository = userRepository;
+        this.postRepository = postRepository;
     }
 
     @GetMapping("/jpa/users")
@@ -67,6 +70,25 @@ public class UserJpaController {
 
         return user.get().getPosts();
 
+    }
+
+    @PostMapping("/jpa/users/{id}/posts")
+    public ResponseEntity<Object> createPostsForUser(@PathVariable int id, @Valid @RequestBody Post post) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user == null)
+            throw new UserNotFoundException("id:" + id);
+
+        post.setUser(user.get());
+
+        Post savedPost = postRepository.save(post);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedPost.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
     @PostMapping("/jpa/users")
