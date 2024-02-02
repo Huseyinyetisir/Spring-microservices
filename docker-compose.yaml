@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+   mysql:
+   image: mysql:8-oracle
+   ports:
+     - 3366:3306
+   environment:
+    MYSQL_USER: 'social_media_user'
+    MYSQL_PASSWORD: 'password'
+    MYSQL_ROOT_PASSWORD: 'password'
+    MYSQL_DATABASE: 'social_media_database'
